@@ -27,6 +27,18 @@ public class Promotion {
         return !currentDate.isBefore(startDate) && !currentDate.isAfter(endDate);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getRequiredQuantity() {
+        return requiredQuantity;
+    }
+
+    public int getFreeQuantity() {
+        return freeQuantity;
+    }
+
     public static class Builder {
 
         private String name;
@@ -87,18 +99,6 @@ public class Promotion {
             }
         }
 
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getRequiredQuantity() {
-        return requiredQuantity;
-    }
-
-    public int getFreeQuantity() {
-        return freeQuantity;
     }
 
 }
