@@ -1,6 +1,7 @@
 package store.domain.promotion;
 
 import java.time.LocalDate;
+import store.util.parser.DateParser;
 
 public class Promotion {
 
@@ -53,13 +54,13 @@ public class Promotion {
         }
 
         public Builder startDate(String startDate) {
-            this.startDate = LocalDate.parse(startDate);
+            this.startDate = DateParser.parse(startDate);
 
             return this;
         }
 
         public Builder endDate(String endDate) {
-            this.endDate = LocalDate.parse(endDate);
+            this.endDate = DateParser.parse(endDate);
 
             return this;
         }
@@ -80,9 +81,6 @@ public class Promotion {
             }
             if (freeQuantity <= 0) {
                 throw new IllegalArgumentException("[ERROR] 증정 수량은 0보다 커야 합니다.");
-            }
-            if (startDate == null || endDate == null) {
-                throw new IllegalArgumentException("[ERROR] 프로모션 기간은 필수입니다.");
             }
             if (startDate.isAfter(endDate)) {
                 throw new IllegalArgumentException("[ERROR] 시작일이 종료일보다 늦을 수 없습니다.");
