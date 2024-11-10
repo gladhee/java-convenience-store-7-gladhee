@@ -45,10 +45,39 @@ public class PromotionProductTest {
                 .rule(rule)
                 .build();
 
-        boolean result = product.decrease(quantity);
+        int result = product.decrease(quantity);
 
-        Assertions.assertThat(result).isTrue();
-        Assertions.assertThat(product.getQuantity()).isEqualTo(5 - quantity);
+        Assertions.assertThat(result).isEqualTo(5 - quantity);
+    }
+
+    @DisplayName("감소할 수량보다 현재 수량이 적으면 예외가 발생한다")
+    @ParameterizedTest
+    @ValueSource(ints = {6, 7, 8})
+    void 감소할_수량보다_현재_수량이_적으면_예외가_발생한다(int quantity) {
+        PromotionProduct product = PromotionProduct.builder()
+                .name("콜라")
+                .quantity(5)
+                .rule(rule)
+                .build();
+
+        Assertions.assertThatThrownBy(() -> product.decrease(quantity))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR]");
+    }
+
+    @DisplayName("감소할 수량이 음수이면 예외가 발생한다")
+    @ParameterizedTest
+    @ValueSource(ints = {-1, -2, -3})
+    void 감소할_수량이_음수이면_예외가_발생한다(int quantity) {
+        PromotionProduct product = PromotionProduct.builder()
+                .name("콜라")
+                .quantity(5)
+                .rule(rule)
+                .build();
+
+        Assertions.assertThatThrownBy(() -> product.decrease(quantity))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("[ERROR]");
     }
 
     @DisplayName("상품 이름이 null이면 예외가 발생한다")

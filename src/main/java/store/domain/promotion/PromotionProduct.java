@@ -19,14 +19,11 @@ public class PromotionProduct {
         return new Builder();
     }
 
-    public boolean decrease(int quantity) {
-        if (this.quantity < quantity) {
-            return false;
-        }
+    public synchronized int decrease(int requestedQuantity) {
+        validateDecrease(requestedQuantity);
+        quantity -= requestedQuantity;
 
-        this.quantity -= quantity;
-
-        return true;
+        return quantity;
     }
 
     public synchronized boolean attemptPromotionPurchase(int tryAmount, LocalDate purchaseDate) {
@@ -54,8 +51,13 @@ public class PromotionProduct {
         }
     }
 
-    public int getQuantity() {
-        return quantity;
+    private void validateDecrease(int requestedQuantity) {
+        if (requestedQuantity < 0) {
+            throw new IllegalArgumentException("[ERROR] 감소할 수량은 음수일 수 없습니다.");
+        }
+        if (quantity < requestedQuantity) {
+            throw new IllegalArgumentException("[ERROR] 재고가 부족합니다.");
+        }
     }
 
     public static class Builder {
