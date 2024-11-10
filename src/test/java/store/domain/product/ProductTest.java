@@ -14,11 +14,9 @@ public class ProductTest {
         Product product = Product.builder()
                 .name("콜라")
                 .price(1000)
-                .quantity(10)
                 .build();
 
-        Assertions.assertThat(product.getName()).isEqualTo("콜라");
-        Assertions.assertThat(product.getPrice()).isEqualTo(1000);
+        Assertions.assertThat(product).isInstanceOf(Product.class);
     }
 
     @DisplayName("상품 이름이 null이면 예외가 발생한다")
@@ -27,7 +25,6 @@ public class ProductTest {
         Assertions.assertThatThrownBy(() -> Product.builder()
                         .name(null)
                         .price(1000)
-                        .quantity(10)
                         .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]");
@@ -39,7 +36,6 @@ public class ProductTest {
         Assertions.assertThatThrownBy(() -> Product.builder()
                         .name("")
                         .price(1000)
-                        .quantity(10)
                         .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]");
@@ -51,53 +47,7 @@ public class ProductTest {
         Assertions.assertThatThrownBy(() -> Product.builder()
                         .name("cola")
                         .price(-1000)
-                        .quantity(10)
                         .build())
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR]");
-    }
-
-    @DisplayName("수량 감소 테스트")
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3})
-    void 수량_감소_테스트(int quantity) {
-        Product product = Product.builder()
-                .name("콜라")
-                .price(1000)
-                .quantity(5)
-                .build();
-
-        int result = product.decrease(quantity);
-
-        Assertions.assertThat(result).isEqualTo(5 - quantity);
-    }
-
-    @DisplayName("감소할 수량보다 현재 수량이 적으면 예외가 발생한다")
-    @ParameterizedTest
-    @ValueSource(ints = {6, 7, 8})
-    void 감소할_수량보다_현재_수량이_적으면_예외가_발생한다(int quantity) {
-        Product product = Product.builder()
-                .name("콜라")
-                .price(1000)
-                .quantity(5)
-                .build();
-
-        Assertions.assertThatThrownBy(() -> product.decrease(quantity))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR]");
-    }
-
-    @DisplayName("감소할 수량이 음수이면 예외가 발생한다")
-    @ParameterizedTest
-    @ValueSource(ints = {-1, -2, -3})
-    void 감소할_수량이_음수이면_예외가_발생한다(int quantity) {
-        Product product = Product.builder()
-                .name("콜라")
-                .price(1000)
-                .quantity(5)
-                .build();
-
-        Assertions.assertThatThrownBy(() -> product.decrease(quantity))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]");
     }

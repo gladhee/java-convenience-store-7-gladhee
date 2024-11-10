@@ -1,23 +1,42 @@
 package store.domain.product;
 
-public class Product {
+import java.util.Objects;
 
+public class Product {
     private final String name;
     private final int price;
-    private int quantity;
 
     private Product(Builder builder) {
         this.name = builder.name;
         this.price = builder.price;
-        this.quantity = builder.quantity;
         validateProduct();
     }
 
-    public synchronized int decrease(int requestedQuantity) {
-        validateDecrease(requestedQuantity);
-        quantity -= requestedQuantity;
+    public static Builder builder() {
+        return new Builder();
+    }
 
-        return quantity;
+    public static class Builder {
+        private String name;
+        private int price;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
+    }
+
+    public int calculateTotalPrice(int requestedQuantity) {
+        return price * requestedQuantity;
     }
 
     private void validateProduct() {
@@ -27,64 +46,23 @@ public class Product {
         if (price <= 0) {
             throw new IllegalArgumentException("[ERROR] 상품 가격은 0보다 커야 합니다.");
         }
-        if (quantity < 0) {
-            throw new IllegalArgumentException("[ERROR] 상품 수량은 음수일 수 없습니다.");
-        }
     }
 
-    private void validateDecrease(int requestedQuantity) {
-        if (requestedQuantity < 0) {
-            throw new IllegalArgumentException("[ERROR] 감소할 수량은 음수일 수 없습니다.");
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
         }
-        if (quantity < requestedQuantity) {
-            throw new IllegalArgumentException("[ERROR] 재고가 부족합니다.");
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
         }
+        Product product = (Product) obj;
+        return price == product.price && name.equals(product.name);
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public static class Builder {
-
-        private String name;
-        private int price;
-        private int quantity;
-
-        public Builder name(String name) {
-            this.name = name;
-
-            return this;
-        }
-
-        public Builder price(int price) {
-            this.price = price;
-
-            return this;
-        }
-
-        public Builder quantity(int quantity) {
-            this.quantity = quantity;
-
-            return this;
-        }
-
-        public Product build() {
-            return new Product(this);
-        }
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price);
     }
 
 }
