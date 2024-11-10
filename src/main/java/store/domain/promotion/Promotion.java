@@ -3,6 +3,7 @@ package store.domain.promotion;
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import store.util.parser.DateParser;
+import store.util.parser.InputParser;
 
 public class Promotion {
 
@@ -39,14 +40,14 @@ public class Promotion {
             return this;
         }
 
-        public Builder requiredQuantity(int requiredQuantity) {
-            this.requiredQuantity = requiredQuantity;
+        public Builder requiredQuantity(String requiredQuantity) {
+            this.requiredQuantity = InputParser.convertToInt(requiredQuantity);
 
             return this;
         }
 
-        public Builder freeQuantity(int freeQuantity) {
-            this.freeQuantity = freeQuantity;
+        public Builder freeQuantity(String freeQuantity) {
+            this.freeQuantity = InputParser.convertToInt(freeQuantity);
 
             return this;
         }

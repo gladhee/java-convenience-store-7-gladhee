@@ -15,8 +15,8 @@ public class PromotionTest {
     void 프로모션_상품_생성_테스트() {
         Promotion product = Promotion.builder()
                 .name("탄산2+1")
-                .requiredQuantity(2)
-                .freeQuantity(1)
+                .requiredQuantity("2")
+                .freeQuantity("1")
                 .startDate("2021-06-01")
                 .endDate("2021-06-30")
                 .build();
@@ -31,8 +31,8 @@ public class PromotionTest {
     void 프로모션명이_올바르지_않으면_예외를_발생한다(String name) {
         Assertions.assertThatThrownBy(() -> Promotion.builder()
                         .name(name)
-                        .requiredQuantity(2)
-                        .freeQuantity(1)
+                        .requiredQuantity("2")
+                        .freeQuantity("1")
                         .startDate("2021-06-01")
                         .endDate("2021-06-30")
                         .build())
@@ -43,7 +43,7 @@ public class PromotionTest {
     @DisplayName("증정 및 필수 수량은 0보다 커야 한다")
     @ParameterizedTest
     @CsvSource(value = {"0,0", "0,1", "1,0"})
-    void 증정_및_필수_수량은_0보다_커야_한다(int requiredQuantity, int freeQuantity) {
+    void 증정_및_필수_수량은_0보다_커야_한다(String requiredQuantity, String freeQuantity) {
         Assertions.assertThatThrownBy(() -> Promotion.builder()
                         .name("탄산2+1")
                         .requiredQuantity(requiredQuantity)
@@ -61,8 +61,8 @@ public class PromotionTest {
     void 종료일이_시작일보다_빠르면_예외를_발생한다(String startDate, String endDate) {
         Assertions.assertThatThrownBy(() -> Promotion.builder()
                         .name("탄산2+1")
-                        .requiredQuantity(2)
-                        .freeQuantity(1)
+                        .requiredQuantity("2")
+                        .freeQuantity("1")
                         .startDate(startDate)
                         .endDate(endDate)
                         .build())
@@ -75,8 +75,8 @@ public class PromotionTest {
     void 현재_시간이_프로모션_기간에_포함되면_true를_반환한다() {
         Promotion product = Promotion.builder()
                 .name("탄산2+1")
-                .requiredQuantity(2)
-                .freeQuantity(1)
+                .requiredQuantity("2")
+                .freeQuantity("1")
                 .startDate("2024-11-01")
                 .endDate("2025-12-30")
                 .build();
