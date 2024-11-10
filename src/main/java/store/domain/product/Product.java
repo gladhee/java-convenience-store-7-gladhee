@@ -1,7 +1,5 @@
 package store.domain.product;
 
-import store.domain.stock.Stock.Builder;
-
 public class Product {
 
     private final String name;
@@ -15,6 +13,13 @@ public class Product {
         validateProduct();
     }
 
+    public synchronized int decrease(int requestedQuantity) {
+        validateDecrease(requestedQuantity);
+        quantity -= requestedQuantity;
+
+        return quantity;
+    }
+
     private void validateProduct() {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 상품명은 빈 값일 수 없습니다.");
@@ -24,6 +29,15 @@ public class Product {
         }
         if (quantity < 0) {
             throw new IllegalArgumentException("[ERROR] 상품 수량은 음수일 수 없습니다.");
+        }
+    }
+
+    private void validateDecrease(int requestedQuantity) {
+        if (requestedQuantity < 0) {
+            throw new IllegalArgumentException("[ERROR] 감소할 수량은 음수일 수 없습니다.");
+        }
+        if (quantity < requestedQuantity) {
+            throw new IllegalArgumentException("[ERROR] 재고가 부족합니다.");
         }
     }
 
