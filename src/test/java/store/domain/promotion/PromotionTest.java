@@ -70,5 +70,20 @@ public class PromotionTest {
                 .hasMessageContaining("[ERROR]");
     }
 
+    @DisplayName("현재 시간이 프로모션 기간에 포함되면 true를 반환한다")
+    @Test
+    void 현재_시간이_프로모션_기간에_포함되면_true를_반환한다() {
+        Promotion product = Promotion.builder()
+                .name("탄산2+1")
+                .requiredQuantity(2)
+                .freeQuantity(1)
+                .startDate("2024-11-01")
+                .endDate("2025-12-30")
+                .build();
+
+        boolean result = product.isApplicable();
+
+        Assertions.assertThat(result).isTrue();
+    }
 
 }
