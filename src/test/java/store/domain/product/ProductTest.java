@@ -52,4 +52,18 @@ public class ProductTest {
                 .hasMessageContaining("[ERROR]");
     }
 
+    @DisplayName("수량을 입력하면 총 가격을 계산한다")
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3})
+    void 수량을_입력하면_총_가격을_계산한다(int requestedQuantity) {
+        Product product = Product.builder()
+                .name("콜라")
+                .price(1000)
+                .build();
+
+        int totalPrice = product.calculateTotalPrice(requestedQuantity);
+
+        Assertions.assertThat(totalPrice).isEqualTo(1000 * requestedQuantity);
+    }
+
 }
