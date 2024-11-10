@@ -13,7 +13,7 @@ public class ProductTest {
     void 상품_생성_테스트() {
         Product product = Product.builder()
                 .name("콜라")
-                .price(1000)
+                .price("1000")
                 .build();
 
         Assertions.assertThat(product).isInstanceOf(Product.class);
@@ -24,7 +24,7 @@ public class ProductTest {
     void 상품_이름_null_예외가_발생한다() {
         Assertions.assertThatThrownBy(() -> Product.builder()
                         .name(null)
-                        .price(1000)
+                        .price("1000")
                         .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]");
@@ -35,7 +35,7 @@ public class ProductTest {
     void 상품_이름_빈_문자열_예외가_발생한다() {
         Assertions.assertThatThrownBy(() -> Product.builder()
                         .name("")
-                        .price(1000)
+                        .price("1000")
                         .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]");
@@ -46,7 +46,7 @@ public class ProductTest {
     void 상품_가격_음수면_예외가_발생한다() {
         Assertions.assertThatThrownBy(() -> Product.builder()
                         .name("cola")
-                        .price(-1000)
+                        .price("-1000")
                         .build())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR]");
@@ -58,7 +58,7 @@ public class ProductTest {
     void 수량을_입력하면_총_가격을_계산한다(int requestedQuantity) {
         Product product = Product.builder()
                 .name("콜라")
-                .price(1000)
+                .price("1000")
                 .build();
 
         int totalPrice = product.calculateTotalPrice(requestedQuantity);

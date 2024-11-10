@@ -1,6 +1,7 @@
 package store.domain.product;
 
 import java.util.Objects;
+import store.util.parser.InputParser;
 
 public class Product {
     private final String name;
@@ -25,8 +26,8 @@ public class Product {
             return this;
         }
 
-        public Builder price(int price) {
-            this.price = price;
+        public Builder price(String price) {
+            this.price = InputParser.convertToInt(price);
             return this;
         }
 
