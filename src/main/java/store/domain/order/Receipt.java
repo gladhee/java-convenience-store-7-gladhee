@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Receipt {
+
     private final List<OrderLine> orderLines;
     private final int totalPrice;
     private final int promotionDiscount;
@@ -40,4 +41,5 @@ public class Receipt {
     public int getMembershipDiscount() {
         return membershipDiscount;
     }
+
 }

@@ -3,6 +3,7 @@ package store.domain.order;
 import store.domain.store.StoreProduct;
 
 public class OrderLine {
+
     private final StoreProduct product;
     private final int quantity;
 
@@ -33,4 +34,5 @@ public class OrderLine {
     public int getQuantity() {
         return quantity;
     }
+
 }

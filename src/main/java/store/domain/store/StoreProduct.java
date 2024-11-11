@@ -1,6 +1,5 @@
 package store.domain.store;
 
-import java.time.LocalDate;
 import java.util.Objects;
 import store.domain.product.Product;
 import store.domain.promotion.Promotion;

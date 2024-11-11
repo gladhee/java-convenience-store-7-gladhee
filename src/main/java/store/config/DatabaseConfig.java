@@ -10,6 +10,7 @@ import store.repository.impl.StoreProductsRepositoryImpl;
 import store.util.reader.FileReader;
 
 public class DatabaseConfig {
+
     private static final String PROMOTIONS_FILE = "promotions.md";
     private static final String PRODUCTS_FILE = "products.md";
     private static final String NULL_VALUE = "null";
@@ -137,4 +138,5 @@ public class DatabaseConfig {
     interface LineParser {
         void parse(String line);
     }
+
 }

@@ -1,9 +1,9 @@
 package store.domain.product;
 
-import java.util.Objects;
 import store.util.parser.InputParser;
 
 public class Product {
+
     private final String name;
     private final int price;
 
@@ -36,23 +36,6 @@ public class Product {
 
     public int getPrice() {
         return price;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Product product = (Product) obj;
-        return price == product.price && name.equals(product.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, price);
     }
 
     @Override

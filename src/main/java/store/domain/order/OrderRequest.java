@@ -1,6 +1,7 @@
 package store.domain.order;
 
 public class OrderRequest {
+
     private final String productName;
     private final int quantity;
 
@@ -30,4 +31,5 @@ public class OrderRequest {
     public int getQuantity() {
         return quantity;
     }
+
 }

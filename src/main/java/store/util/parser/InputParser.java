@@ -1,12 +1,6 @@
 package store.util.parser;
 
-import java.util.Map;
-
 public class InputParser {
-
-    public static Map<String, Integer> parseItems(String input) {
-        return null;
-    }
 
     public static Integer convertToInt(String value) {
         try {

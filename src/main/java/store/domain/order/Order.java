@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
+
     private static final int MEMBERSHIP_DISCOUNT_RATE = 30;
     private static final int MAX_MEMBERSHIP_DISCOUNT = 8000;
 
@@ -30,7 +31,6 @@ public class Order {
         int totalPrice = calculateTotalPrice();
         int promotionDiscount = calculatePromotionDiscount();
         int membershipDiscount = calculateMembershipDiscount(totalPrice - promotionDiscount);
-
         return Receipt.create(
                 orderLines,
                 totalPrice,
@@ -62,4 +62,5 @@ public class Order {
     public List<OrderLine> getOrderLines() {
         return new ArrayList<>(orderLines);
     }
+
 }

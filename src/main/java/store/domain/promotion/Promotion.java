@@ -48,10 +48,6 @@ public class Promotion {
         return requiredQuantity;
     }
 
-    public int getFreeQuantity() {
-        return freeQuantity;
-    }
-
     private void validatePromotionProduct() {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 프로모션명은 빈 값일 수 없습니다.");
@@ -65,24 +61,6 @@ public class Promotion {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("[ERROR] 시작일이 종료일보다 늦을 수 없습니다.");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Promotion promotion = (Promotion) o;
-
-        return name.equals(promotion.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
     }
 
     public static class Builder {
