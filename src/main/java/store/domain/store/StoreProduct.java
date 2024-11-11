@@ -120,7 +120,27 @@ public class StoreProduct {
     }
 
     public boolean isOutOfStock(int requestedQuantity) {
-        return !hasSufficientStock(requestedQuantity);
+        if (normalQuantity == null) {
+            return promotionQuantity < requestedQuantity;
+        }
+        if (promotionQuantity == null) {
+            return normalQuantity < requestedQuantity;
+        }
+        return (normalQuantity + promotionQuantity) < requestedQuantity;
+    }
+
+    public int calculateNonPromotionQuantity(int requestedQuantity) {
+        int totalRequiredForPromotion = promotion.getRequiredQuantity();
+        int promotionSetCount = promotionQuantity / totalRequiredForPromotion;
+        int maxPromotionItems = promotionSetCount * totalRequiredForPromotion;
+        if (requestedQuantity <= maxPromotionItems) {
+            return 0;
+        }
+        return requestedQuantity - maxPromotionItems;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     public String toNormalString() {
