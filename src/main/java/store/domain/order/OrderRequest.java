@@ -1,5 +1,8 @@
 package store.domain.order;
 
+import store.exception.ProductException.EmptyProductNameException;
+import store.exception.PromotionException.QuantityShouldBePositiveException;
+
 public class OrderRequest {
 
     private final String productName;
@@ -17,10 +20,10 @@ public class OrderRequest {
 
     private void validateRequest(String productName, int quantity) {
         if (productName == null || productName.trim().isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 상품명은 필수입니다.");
+            throw new EmptyProductNameException();
         }
         if (quantity <= 0) {
-            throw new IllegalArgumentException("[ERROR] 수량은 0보다 커야 합니다.");
+        throw new QuantityShouldBePositiveException();
         }
     }
 

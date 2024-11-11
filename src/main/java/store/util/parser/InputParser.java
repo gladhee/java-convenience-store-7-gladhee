@@ -1,5 +1,7 @@
 package store.util.parser;
 
+import store.exception.InputException.InvalidInputException;
+
 public class InputParser {
 
     public static Integer convertToInt(String value) {
@@ -9,7 +11,7 @@ public class InputParser {
             }
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
+            throw new InvalidInputException();
         }
     }
 

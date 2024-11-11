@@ -5,11 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import store.domain.order.OrderRequest;
+import store.exception.InputException.InvalidFormatException;
+import store.exception.InputException.InvalidInputException;
 
 public class OrderRequestParser {
-
-    private static final String ERROR_INVALID_INPUT = "[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.";
-    private static final String ERROR_INVALID_FORMAT = "[ERROR] 올바르지 않은 형식으로 입력했습니다.";
 
     private static final Pattern ORDER_PATTERN = Pattern.compile("\\[(.*?)]");
     private static final Pattern INPUT_FORMAT = Pattern.compile("\\[([^-]+-\\d+)](?:,\\[([^-]+-\\d+)])*");
@@ -45,10 +44,10 @@ public class OrderRequestParser {
 
     private static void validateInput(String input) {
         if (isNullOrEmpty(input)) {
-            throw new IllegalArgumentException(ERROR_INVALID_INPUT);
+            throw new InvalidInputException();
         }
         if (!isValidFormat(input)) {
-            throw new IllegalArgumentException(ERROR_INVALID_FORMAT);
+            throw new InvalidFormatException();
         }
     }
 
@@ -62,7 +61,7 @@ public class OrderRequestParser {
 
     private static void validateOrderParts(String[] parts) {
         if (parts.length != 2) {
-            throw new IllegalArgumentException(ERROR_INVALID_INPUT);
+            throw new InvalidInputException();
         }
     }
 }

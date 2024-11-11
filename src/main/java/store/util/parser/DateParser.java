@@ -3,6 +3,8 @@ package store.util.parser;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import store.exception.ParserException.DateIsNotValidException;
+import store.exception.ParserException.DateIsNotValidFormatException;
 
 public class DateParser {
 
@@ -15,7 +17,7 @@ public class DateParser {
 
     private static void validateNotEmpty(String dateStr) {
         if (dateStr == null || dateStr.trim().isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 날짜는 필수 값입니다.");
+            throw new DateIsNotValidException();
         }
     }
 
@@ -25,7 +27,7 @@ public class DateParser {
 
             return LocalDate.parse(dateStr, formatter);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("[ERROR] 날짜 형식이 올바르지 않습니다.");
+            throw new DateIsNotValidFormatException();
         }
     }
 

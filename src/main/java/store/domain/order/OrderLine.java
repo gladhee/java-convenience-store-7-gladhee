@@ -1,6 +1,7 @@
 package store.domain.order;
 
 import store.domain.store.StoreProduct;
+import store.exception.OrderException.OrderQuantityShouldBePositiveException;
 
 public class OrderLine {
 
@@ -15,7 +16,7 @@ public class OrderLine {
 
     private void validateQuantity(int quantity) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("[ERROR] 주문 수량은 0보다 커야 합니다.");
+            throw new OrderQuantityShouldBePositiveException();
         }
     }
 

@@ -7,6 +7,7 @@ import store.domain.order.OrderLine;
 import store.domain.order.Receipt;
 
 public class ReceiptView {
+
     private static final String STORE_NAME = "W 편의점";
     private static final String HEADER_BORDER = "==============";
     private static final String RECEIPT_BORDER = "====================================";

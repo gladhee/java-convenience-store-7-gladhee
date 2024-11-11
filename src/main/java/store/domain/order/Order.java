@@ -2,6 +2,7 @@ package store.domain.order;
 
 import java.util.ArrayList;
 import java.util.List;
+import store.exception.OrderException.OrderItemShouldBeRequiredException;
 
 public class Order {
 
@@ -19,7 +20,7 @@ public class Order {
 
     private void validateOrderLines(List<OrderLine> orderLines) {
         if (orderLines == null || orderLines.isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 주문 항목은 필수입니다.");
+            throw new OrderItemShouldBeRequiredException();
         }
     }
 

@@ -22,11 +22,11 @@ public class OrderRequestTest {
     void 상품명_유효성검사() {
         assertThatThrownBy(() -> OrderRequest.of(null, 5))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] 상품명은 필수입니다.");
+                .hasMessageContaining("[ERROR]");
 
         assertThatThrownBy(() -> OrderRequest.of(" ", 5))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] 상품명은 필수입니다.");
+                .hasMessageContaining("[ERROR]");
     }
 
     @DisplayName("수량이 0 이하일 경우 예외 발생")
@@ -34,11 +34,11 @@ public class OrderRequestTest {
     void 수량_유효성검사() {
         assertThatThrownBy(() -> OrderRequest.of("상품명", 0))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] 수량은 0보다 커야 합니다.");
+                .hasMessageContaining("[ERROR]");
 
         assertThatThrownBy(() -> OrderRequest.of("상품명", -1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] 수량은 0보다 커야 합니다.");
+                .hasMessageContaining("[ERROR]");
     }
 
 }

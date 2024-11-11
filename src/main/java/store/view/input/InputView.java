@@ -2,6 +2,8 @@ package store.view.input;
 
 import camp.nextstep.edu.missionutils.Console;
 import store.domain.product.Product;
+import store.exception.InputException.InvalidYesOrNoException;
+import store.view.output.OutputView;
 
 public class InputView {
 
@@ -54,14 +56,14 @@ public class InputView {
 
             return input.equals("Y");
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            OutputView.printError(e.getMessage());
             return inputYesOrNo();
         }
     }
 
     private static void validateYesOrNo(String input) {
         if (!input.equals("Y") && !input.equals("N")) {
-            throw new IllegalArgumentException("[ERROR] Y 또는 N을 입력해 주세요.");
+            throw new InvalidYesOrNoException();
         }
     }
 

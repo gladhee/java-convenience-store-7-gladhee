@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
+import store.exception.FileException.FileCannotReadException;
+import store.exception.FileException.FileNotFoundException;
 
 public class FileReader {
 
@@ -24,7 +26,7 @@ public class FileReader {
 
     private static void validateInputStream(InputStream inputStream, String filename) {
         if (inputStream == null) {
-            throw new IllegalStateException("[ERROR] 파일을 찾을 수 없습니다: " + filename);
+            throw new FileNotFoundException(filename);
         }
     }
 
@@ -33,7 +35,7 @@ public class FileReader {
                 new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.toList());
         } catch (IOException e) {
-            throw new IllegalStateException("[ERROR] 파일을 읽을 수 없습니다: " + filename, e);
+            throw new FileCannotReadException(filename);
         }
     }
 

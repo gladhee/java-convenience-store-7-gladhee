@@ -3,6 +3,7 @@ package store.repository.impl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import store.domain.product.Product;
+import store.exception.ProductException.DoesNotExistProductException;
 import store.repository.interfaces.ProductRepository;
 
 public class ProductRepositoryImpl implements ProductRepository {
@@ -26,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product findByName(String productName) {
         Product product = products.get(productName);
         if (product == null) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다.");
+            throw new DoesNotExistProductException();
         }
 
         return product;

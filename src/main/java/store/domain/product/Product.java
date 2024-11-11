@@ -1,5 +1,7 @@
 package store.domain.product;
 
+import store.exception.ProductException.EmptyProductNameException;
+import store.exception.ProductException.PriceShouldBePositiveException;
 import store.util.parser.InputParser;
 
 public class Product {
@@ -23,10 +25,10 @@ public class Product {
 
     private void validateProduct() {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 상품명은 빈 값일 수 없습니다.");
+            throw new EmptyProductNameException();
         }
         if (price <= 0) {
-            throw new IllegalArgumentException("[ERROR] 상품 가격은 0보다 커야 합니다.");
+            throw new PriceShouldBePositiveException();
         }
     }
 

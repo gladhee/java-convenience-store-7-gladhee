@@ -3,6 +3,7 @@ package store.domain.store;
 import java.util.Objects;
 import store.domain.product.Product;
 import store.domain.promotion.Promotion;
+import store.exception.OrderException.OutOfStockException;
 import store.util.parser.InputParser;
 
 public class StoreProduct {
@@ -29,7 +30,7 @@ public class StoreProduct {
 
     public void decreaseStock(int quantity) {
         if (isOutOfStock(quantity)) {
-            throw new IllegalStateException("[ERROR] 재고가 부족합니다.");
+            throw new OutOfStockException();
         }
         if (isPromotionApplicable()) {
             decreaseWithPromotion(quantity);
@@ -39,21 +40,13 @@ public class StoreProduct {
     }
 
     private void decreaseWithPromotion(int quantity) {
-        int promotionSets = quantity / promotion.calculateTotalQuantityPerSet();
-        int remainingQuantity = quantity % promotion.calculateTotalQuantityPerSet();
+        int totalQuantityPerSet = promotion.calculateTotalQuantityPerSet();
+        int promotionSets = quantity / totalQuantityPerSet;
+        int remainingQuantity = quantity % totalQuantityPerSet;
+        int promotionNeeded = promotionSets * totalQuantityPerSet;
 
-        // 프로모션 재고 처리
-        int promotionNeeded = promotionSets * promotion.calculateTotalQuantityPerSet();
-        if (promotionQuantity >= promotionNeeded) {
-            promotionQuantity -= promotionNeeded;
-        } else {
-            int remainingFromPromotion = promotionNeeded - promotionQuantity;
-            promotionQuantity = 0;
-            normalQuantity -= remainingFromPromotion;
-        }
-
-        // 남은 수량 처리
-        normalQuantity -= remainingQuantity;
+        promotionQuantity = Math.max(0, promotionQuantity - promotionNeeded);
+        normalQuantity -= (promotionNeeded - promotionQuantity) + remainingQuantity;
     }
 
     private void decreaseNormalStock(int quantity) {
@@ -74,7 +67,6 @@ public class StoreProduct {
     private int calculatePromotionPrice(int quantity) {
         int sets = quantity / promotion.calculateTotalQuantityPerSet();
         int remainder = quantity % promotion.calculateTotalQuantityPerSet();
-
         int setPrice = product.calculateTotalPrice(sets) * promotion.getRequiredQuantity();
         int remainderPrice = product.calculateTotalPrice(remainder);
 
@@ -85,7 +77,6 @@ public class StoreProduct {
         if (!isPromotionApplicable()) {
             return 0;
         }
-
         int totalPromotionQuantity = promotionQuantity != null ? promotionQuantity : 0;
         int maxApplicableSets = totalPromotionQuantity / promotion.calculateTotalQuantityPerSet();
         int actualSets = Math.min(quantity / promotion.calculateTotalQuantityPerSet(), maxApplicableSets);

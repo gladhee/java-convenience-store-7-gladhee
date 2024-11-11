@@ -2,6 +2,9 @@ package store.domain.promotion;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
+import store.exception.PromotionException.EmptyPromotionNameException;
+import store.exception.PromotionException.QuantityShouldBePositiveException;
+import store.exception.PromotionException.StartDateShouldBeEarlierThanEndDateException;
 import store.util.parser.DateParser;
 import store.util.parser.InputParser;
 
@@ -50,16 +53,16 @@ public class Promotion {
 
     private void validatePromotionProduct() {
         if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 프로모션명은 빈 값일 수 없습니다.");
+            throw new EmptyPromotionNameException();
         }
         if (requiredQuantity <= 0) {
-            throw new IllegalArgumentException("[ERROR] 필요 수량은 0보다 커야 합니다.");
+            throw new QuantityShouldBePositiveException();
         }
         if (freeQuantity <= 0) {
-            throw new IllegalArgumentException("[ERROR] 증정 수량은 0보다 커야 합니다.");
+            throw new QuantityShouldBePositiveException();
         }
         if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("[ERROR] 시작일이 종료일보다 늦을 수 없습니다.");
+            throw new StartDateShouldBeEarlierThanEndDateException();
         }
     }
 

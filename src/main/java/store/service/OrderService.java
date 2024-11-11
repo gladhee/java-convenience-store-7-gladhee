@@ -8,6 +8,8 @@ import store.domain.order.OrderRequest;
 import store.domain.order.Receipt;
 import store.domain.promotion.Promotion;
 import store.domain.store.StoreProduct;
+import store.exception.OrderException.OrderIsCanceledException;
+import store.exception.OrderException.OutOfStockException;
 import store.repository.impl.StoreProductsRepositoryImpl;
 import store.view.input.InputView;
 
@@ -40,15 +42,14 @@ public class OrderService {
         validateStock(product, request.getQuantity());
         int finalQuantity = handlePromotions(product, request.getQuantity());
         if (finalQuantity == 0) {
-            throw new IllegalStateException("[ERROR] 주문이 취소되었습니다.");
+            throw new OrderIsCanceledException();
         }
         return new OrderLine(product, finalQuantity);
     }
 
     private void validateStock(StoreProduct product, int quantity) {
         if (product.isOutOfStock(quantity)) {
-            throw new IllegalArgumentException(
-                    String.format("[ERROR] %s의 재고가 부족합니다.", product.getName()));
+            throw new OutOfStockException();
         }
     }
 
@@ -78,10 +79,8 @@ public class OrderService {
             return 0;
         }
         int totalNeeded = promotion.calculateTotalQuantityPerSet();
-
         int possiblePromotionSets = promotionStock / totalNeeded;
         int coveredByPromotion = possiblePromotionSets * totalNeeded;
-
         return Math.max(0, requestedQuantity - coveredByPromotion);
     }
 
