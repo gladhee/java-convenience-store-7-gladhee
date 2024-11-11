@@ -1,11 +1,9 @@
 package store.repository.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import store.domain.promotion.Promotion;
 import store.domain.store.StoreProduct;
 import store.repository.interfaces.StoreProductsRepository;
 
@@ -28,12 +26,7 @@ public class StoreProductsRepositoryImpl implements StoreProductsRepository {
 
     @Override
     public StoreProduct findByName(String productName) {
-        StoreProduct storeProduct = storeProducts.get(productName);
-        if (storeProduct == null) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다.");
-        }
-
-        return storeProduct;
+        return storeProducts.get(productName);
     }
 
     @Override

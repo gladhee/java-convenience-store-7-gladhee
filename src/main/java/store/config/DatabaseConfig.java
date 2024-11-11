@@ -68,29 +68,28 @@ public class DatabaseConfig {
 
     private void createStoreProduct(String[] infos) {
         Product product = products.findByName(infos[0]);
-        try {
-            StoreProduct storeProduct = storeProducts.findByName(infos[0]);
-            System.out.println(infos[2]);
+        StoreProduct storeProduct = storeProducts.findByName(infos[0]);
+        if (storeProduct != null) {
             storeProduct.updateNormalQuantity(infos[2]);
+            return;
+        }
 
-        } catch (IllegalArgumentException e) {
-            if (!infos[3].equals("null")) {
-                Promotion promotion = promotions.findByName(infos[3]);
-                storeProducts.save(infos[0], StoreProduct.builder()
-                        .product(product)
-                        .normalQuantity(null)
-                        .promotionQuantity(infos[2])
-                        .promotion(promotion)
-                        .build());
-                return;
-            }
+        if (!infos[3].equals("null")) {
+            Promotion promotion = promotions.findByName(infos[3]);
             storeProducts.save(infos[0], StoreProduct.builder()
                     .product(product)
-                    .normalQuantity(infos[2])
-                    .promotionQuantity(null)
-                    .promotion(null)
+                    .normalQuantity("0")
+                    .promotionQuantity(infos[2])
+                    .promotion(promotion)
                     .build());
+            return;
         }
+        storeProducts.save(infos[0], StoreProduct.builder()
+                .product(product)
+                .normalQuantity(infos[2])
+                .promotionQuantity(null)
+                .promotion(null)
+                .build());
 
     }
 
