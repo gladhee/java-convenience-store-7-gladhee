@@ -67,10 +67,6 @@ public class StoreProduct {
         return (normalQuantity + promotionQuantity) >= requestedQuantity;
     }
 
-    public int getTotalQuantity() {
-        return normalQuantity + promotionQuantity;
-    }
-
     public void decreaseStock(int quantity) {
         if (!hasSufficientStock(quantity)) {
             throw new IllegalStateException("[ERROR] 재고가 부족합니다.");
@@ -135,8 +131,11 @@ public class StoreProduct {
             return 0;
         }
 
-        int sets = quantity / promotion.calculateTotalQuantityPerSet();
-        return sets * promotion.calculatePromotionDiscount(product.getPrice());
+        int totalPromotionQuantity = promotionQuantity != null ? promotionQuantity : 0;
+        int maxApplicableSets = totalPromotionQuantity / promotion.calculateTotalQuantityPerSet();
+        int actualSets = Math.min(quantity / promotion.calculateTotalQuantityPerSet(), maxApplicableSets);
+
+        return actualSets * promotion.calculatePromotionDiscount(product.getPrice());
     }
 
     public String getName() {
@@ -151,12 +150,8 @@ public class StoreProduct {
         return Objects.requireNonNullElse(promotionQuantity, 0);
     }
 
-    public int getNormalQuantity() {
-        if (normalQuantity == null) {
-            return 0;
-        }
-
-        return normalQuantity;
+    public boolean isOutOfStock(int requestedQuantity) {
+        return !hasSufficientStock(requestedQuantity);
     }
 
     public String toNormalString() {
