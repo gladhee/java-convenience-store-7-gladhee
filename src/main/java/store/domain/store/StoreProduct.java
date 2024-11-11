@@ -8,8 +8,8 @@ public class StoreProduct {
 
     private final Product product;
     private Promotion promotion;
-    private int normalQuantity;
-    private int promotionQuantity;
+    private Integer normalQuantity;
+    private Integer promotionQuantity;
 
     private StoreProduct(Builder builder) {
         this.product = builder.product;
@@ -24,9 +24,9 @@ public class StoreProduct {
 
     public static class Builder {
         private Product product;
-        private final Promotion promotion = null;
-        private int normalQuantity;
-        private final int promotionQuantity = 0;
+        private Promotion promotion;
+        private Integer normalQuantity;
+        private Integer promotionQuantity;
 
         public Builder product(Product product) {
             this.product = product;
@@ -38,18 +38,52 @@ public class StoreProduct {
             return this;
         }
 
+        public Builder promotionQuantity(String promotionQuantity) {
+            this.promotionQuantity = InputParser.convertToInt(promotionQuantity);
+            return this;
+        }
+
+        public Builder promotion(Promotion promotion) {
+            this.promotion = promotion;
+            return this;
+        }
+
         public StoreProduct build() {
             return new StoreProduct(this);
         }
     }
 
-    public void updatePromotion(String promotionQuantity, Promotion promotion) {
-        this.promotionQuantity = InputParser.convertToInt(promotionQuantity);
-        this.promotion = promotion;
+    public void updateNormalQuantity(String normalQuantity) {
+        this.normalQuantity = InputParser.convertToInt(normalQuantity);
     }
 
     public boolean hasSufficientStock(int requestedQuantity) {
         return (normalQuantity + promotionQuantity) >= requestedQuantity;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public String toNormalString() {
+        if (normalQuantity == null) {
+            return "";
+        }
+        if (normalQuantity == 0) {
+            return "- " + product.toString() + " 재고없음\n";
+        }
+        return "- " + product.toString() + " " + normalQuantity + "개\n";
+    }
+
+    public String toPromotionString() {
+        if (promotionQuantity == null) {
+            return "";
+        }
+        if (promotionQuantity == 0) {
+            return "- " + product.toString() + " 재고없음 " + promotion.getName() + "\n";
+        }
+
+        return "- " + product.toString() + " " + promotionQuantity + "개 " + promotion.getName() + "\n";
     }
 
 }
