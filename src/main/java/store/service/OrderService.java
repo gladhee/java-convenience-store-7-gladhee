@@ -39,17 +39,15 @@ public class OrderService {
     private OrderLine createOrderLine(OrderRequest request) {
         StoreProduct product = storeProductsRepository.findByName(request.getProductName());
         validateStock(product, request.getQuantity());
-
         int finalQuantity = handlePromotions(product, request.getQuantity());
         if (finalQuantity == 0) {
             throw new IllegalStateException("[ERROR] 주문이 취소되었습니다.");
         }
-
         return new OrderLine(product, finalQuantity);
     }
 
     private void validateStock(StoreProduct product, int quantity) {
-        if (!product.hasSufficientStock(quantity)) {
+        if (product.isOutOfStock(quantity)) {
             throw new IllegalArgumentException(
                     String.format("[ERROR] %s의 재고가 부족합니다.", product.getName()));
         }
@@ -60,43 +58,18 @@ public class OrderService {
         if (promotion != null && promotion.isApplicable()) {
             return requestedQuantity;
         }
-
         return handlePromotionQuantity(product, promotion, requestedQuantity);
     }
 
-    private int handlePromotionQuantity(StoreProduct product, Promotion promotion, int requestedQuantity) {
-        // 프로모션 추가 구매 제안
-        int additionalNeeded = calculateAdditionalNeeded(promotion, requestedQuantity);
-        if (additionalNeeded > 0) {
-            if (InputView.askToPromotionNotApplicablePurchase(product
-                    .getName(), additionalNeeded)) {
-                int newQuantity = requestedQuantity + additionalNeeded;
-                if (product.hasSufficientStock(newQuantity)) {
-                    return newQuantity;
-                }
-            }
-            return requestedQuantity;
-        }
-
-        // 프로모션 재고 부족 처리
-        int normalPriceQuantity = calculateNormalPriceQuantity(product, requestedQuantity);
+    private int handlePromotionQuantity(StoreProduct storeProduct, Promotion promotion, int requestedQuantity) {
+        int normalPriceQuantity = calculateNormalPriceQuantity(storeProduct, requestedQuantity);
         if (normalPriceQuantity > 0) {
-            if (InputView.askToPromotionPurchase(product.getName(), normalPriceQuantity)) {
+            if (InputView.askToPromotionPurchase(storeProduct.getName(), normalPriceQuantity)) {
                 return requestedQuantity;
             }
             return requestedQuantity - normalPriceQuantity;
         }
-
         return requestedQuantity;
-    }
-
-    private int calculateAdditionalNeeded(Promotion promotion, int quantity) {
-        if (promotion == null) {
-            return 0;
-        }
-        int totalNeeded = promotion.calculateTotalQuantityPerSet();
-        int remainder = quantity % totalNeeded;
-        return remainder == 0 ? 0 : totalNeeded - remainder;
     }
 
     private int calculateNormalPriceQuantity(StoreProduct product, int requestedQuantity) {

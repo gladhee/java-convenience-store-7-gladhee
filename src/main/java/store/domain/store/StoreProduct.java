@@ -28,28 +28,15 @@ public class StoreProduct {
         this.normalQuantity = InputParser.convertToInt(normalQuantity);
     }
 
-    public boolean hasSufficientStock(int requestedQuantity) {
-        if (normalQuantity == null)
-            return promotionQuantity >= requestedQuantity;
-        if (promotionQuantity == null)
-            return normalQuantity >= requestedQuantity;
-        return (normalQuantity + promotionQuantity) >= requestedQuantity;
-    }
-
     public void decreaseStock(int quantity) {
-        if (!hasSufficientStock(quantity)) {
+        if (isOutOfStock(quantity)) {
             throw new IllegalStateException("[ERROR] 재고가 부족합니다.");
         }
-
-        if (hasValidPromotion()) {
+        if (isPromotionApplicable()) {
             decreaseWithPromotion(quantity);
             return;
         }
         decreaseNormalStock(quantity);
-    }
-
-    private boolean hasValidPromotion() {
-        return promotion != null && promotion.isApplicable();
     }
 
     private void decreaseWithPromotion(int quantity) {
@@ -75,7 +62,7 @@ public class StoreProduct {
     }
 
     public int calculatePrice(int requestedQuantity) {
-        if (!hasValidPromotion()) {
+        if (!isPromotionApplicable()) {
             return calculateNormalPrice(requestedQuantity);
         }
         return calculatePromotionPrice(requestedQuantity);
@@ -96,7 +83,7 @@ public class StoreProduct {
     }
 
     public int calculatePromotionDiscount(int quantity) {
-        if (!hasValidPromotion()) {
+        if (!isPromotionApplicable()) {
             return 0;
         }
 
@@ -119,6 +106,10 @@ public class StoreProduct {
         return Objects.requireNonNullElse(promotionQuantity, 0);
     }
 
+    public boolean isPromotionApplicable() {
+        return promotion != null && promotion.isApplicable();
+    }
+
     public boolean isOutOfStock(int requestedQuantity) {
         if (normalQuantity == null) {
             return promotionQuantity < requestedQuantity;
@@ -130,6 +121,9 @@ public class StoreProduct {
     }
 
     public int calculateNonPromotionQuantity(int requestedQuantity) {
+        if (promotion == null) {
+            return 0;
+        }
         int totalRequiredForPromotion = promotion.getRequiredQuantity();
         int promotionSetCount = promotionQuantity / totalRequiredForPromotion;
         int maxPromotionItems = promotionSetCount * totalRequiredForPromotion;

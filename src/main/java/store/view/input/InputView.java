@@ -1,6 +1,7 @@
 package store.view.input;
 
 import camp.nextstep.edu.missionutils.Console;
+import store.domain.product.Product;
 
 public class InputView {
 
@@ -29,10 +30,10 @@ public class InputView {
         return inputYesOrNo();
     }
 
-    public static boolean askToPromotionNotApplicablePurchase(String productName, int quantity) {
+    public static boolean askToPromotionNotApplicablePurchase(Product product, int quantity) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("현재 ").append(productName).append(" ")
+        stringBuilder.append("현재 ").append(product.getName()).append(" ")
                 .append(quantity).append("개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)");
 
         System.out.println(stringBuilder.toString());

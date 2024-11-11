@@ -1,48 +1,68 @@
 package store.util.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import store.domain.order.OrderRequest;
 
 public class OrderRequestParser {
 
+    private static final String ERROR_INVALID_INPUT = "[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.";
+    private static final String ERROR_INVALID_FORMAT = "[ERROR] 올바르지 않은 형식으로 입력했습니다.";
+
     private static final Pattern ORDER_PATTERN = Pattern.compile("\\[(.*?)]");
+    private static final Pattern INPUT_FORMAT = Pattern.compile("\\[([^-]+-\\d+)](?:,\\[([^-]+-\\d+)])*");
+    private static final String ORDER_DELIMITER = "-";
 
     public static List<OrderRequest> parse(String input) {
         validateInput(input);
+        return extractOrders(input);
+    }
 
-        List<OrderRequest> requests = new ArrayList<>();
+    private static List<OrderRequest> extractOrders(String input) {
         Matcher matcher = ORDER_PATTERN.matcher(input);
 
-        while (matcher.find()) {
-            String[] parts = matcher.group(1).split("-");
-            int amount = validateParts(parts);
+        return matcher.results()
+                .map(result -> result.group(1))
+                .map(OrderRequestParser::createOrderRequest)
+                .collect(Collectors.toList());
+    }
 
-            requests.add(OrderRequest.of(
-                    parts[0],
-                    amount
-            ));
-        }
+    private static OrderRequest createOrderRequest(String orderString) {
+        String[] orderParts = splitOrderString(orderString);
+        validateOrderParts(orderParts);
 
-        return requests;
+        String menuName = orderParts[0];
+        int quantity = InputParser.convertToInt(orderParts[1]);
+
+        return OrderRequest.of(menuName, quantity);
+    }
+
+    private static String[] splitOrderString(String orderString) {
+        return orderString.split(ORDER_DELIMITER);
     }
 
     private static void validateInput(String input) {
-        if (input == null || input.trim().isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
+        if (isNullOrEmpty(input)) {
+            throw new IllegalArgumentException(ERROR_INVALID_INPUT);
         }
-        if (!input.matches("\\[([^-]+-\\d+)](?:,\\[([^-]+-\\d+)])*")) {
-            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다.");
+        if (!isValidFormat(input)) {
+            throw new IllegalArgumentException(ERROR_INVALID_FORMAT);
         }
     }
 
-    private static Integer validateParts(String[] parts) {
+    private static boolean isNullOrEmpty(String input) {
+        return input == null || input.trim().isEmpty();
+    }
+
+    private static boolean isValidFormat(String input) {
+        return INPUT_FORMAT.matcher(input).matches();
+    }
+
+    private static void validateOrderParts(String[] parts) {
         if (parts.length != 2) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(ERROR_INVALID_INPUT);
         }
-        return InputParser.convertToInt(parts[1]);
     }
-
 }
