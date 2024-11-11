@@ -8,8 +8,11 @@ public class InputParser {
         return null;
     }
 
-    public static int convertToInt(String value) {
+    public static Integer convertToInt(String value) {
         try {
+            if (value == null) {
+                return null;
+            }
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("[ERROR] 숫자로 변환할 수 없는 값입니다.");
