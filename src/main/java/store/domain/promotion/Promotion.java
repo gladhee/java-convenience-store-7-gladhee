@@ -26,50 +26,6 @@ public class Promotion {
         return new Builder();
     }
 
-    public static class Builder {
-
-        private String name;
-        private int requiredQuantity;
-        private int freeQuantity;
-        private LocalDate startDate;
-        private LocalDate endDate;
-
-        public Builder name(String name) {
-            this.name = name;
-
-            return this;
-        }
-
-        public Builder requiredQuantity(String requiredQuantity) {
-            this.requiredQuantity = InputParser.convertToInt(requiredQuantity);
-
-            return this;
-        }
-
-        public Builder freeQuantity(String freeQuantity) {
-            this.freeQuantity = InputParser.convertToInt(freeQuantity);
-
-            return this;
-        }
-
-        public Builder startDate(String startDate) {
-            this.startDate = DateParser.parse(startDate);
-
-            return this;
-        }
-
-        public Builder endDate(String endDate) {
-            this.endDate = DateParser.parse(endDate);
-
-            return this;
-        }
-
-        public Promotion build() {
-            return new Promotion(this);
-        }
-
-    }
-
     public boolean isApplicable() {
         LocalDate currentDate = DateTimes.now().toLocalDate();
 
@@ -127,6 +83,50 @@ public class Promotion {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public static class Builder {
+
+        private String name;
+        private int requiredQuantity;
+        private int freeQuantity;
+        private LocalDate startDate;
+        private LocalDate endDate;
+
+        public Builder name(String name) {
+            this.name = name;
+
+            return this;
+        }
+
+        public Builder requiredQuantity(String requiredQuantity) {
+            this.requiredQuantity = InputParser.convertToInt(requiredQuantity);
+
+            return this;
+        }
+
+        public Builder freeQuantity(String freeQuantity) {
+            this.freeQuantity = InputParser.convertToInt(freeQuantity);
+
+            return this;
+        }
+
+        public Builder startDate(String startDate) {
+            this.startDate = DateParser.parse(startDate);
+
+            return this;
+        }
+
+        public Builder endDate(String endDate) {
+            this.endDate = DateParser.parse(endDate);
+
+            return this;
+        }
+
+        public Promotion build() {
+            return new Promotion(this);
+        }
+
     }
 
 }

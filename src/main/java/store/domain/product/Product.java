@@ -17,25 +17,6 @@ public class Product {
         return new Builder();
     }
 
-    public static class Builder {
-        private String name;
-        private int price;
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder price(String price) {
-            this.price = InputParser.convertToInt(price);
-            return this;
-        }
-
-        public Product build() {
-            return new Product(this);
-        }
-    }
-
     public int calculateTotalPrice(int requestedQuantity) {
         return price * requestedQuantity;
     }
@@ -77,6 +58,25 @@ public class Product {
     @Override
     public String toString() {
         return name + " " + String.format("%,d", price) + "원";
+    }
+
+    public static class Builder {
+        private String name;
+        private int price;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(String price) {
+            this.price = InputParser.convertToInt(price);
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
     }
 
 }

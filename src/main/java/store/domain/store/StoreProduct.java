@@ -24,37 +24,6 @@ public class StoreProduct {
         return new Builder();
     }
 
-    public static class Builder {
-        private Product product;
-        private Promotion promotion;
-        private Integer normalQuantity;
-        private Integer promotionQuantity;
-
-        public Builder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public Builder normalQuantity(String normalQuantity) {
-            this.normalQuantity = InputParser.convertToInt(normalQuantity);
-            return this;
-        }
-
-        public Builder promotionQuantity(String promotionQuantity) {
-            this.promotionQuantity = InputParser.convertToInt(promotionQuantity);
-            return this;
-        }
-
-        public Builder promotion(Promotion promotion) {
-            this.promotion = promotion;
-            return this;
-        }
-
-        public StoreProduct build() {
-            return new StoreProduct(this);
-        }
-    }
-
     public void updateNormalQuantity(String normalQuantity) {
         this.normalQuantity = InputParser.convertToInt(normalQuantity);
     }
@@ -173,6 +142,38 @@ public class StoreProduct {
         }
 
         return "- " + product.toString() + " " + promotionQuantity + "개 " + promotion.getName() + "\n";
+    }
+
+
+    public static class Builder {
+        private Product product;
+        private Promotion promotion;
+        private Integer normalQuantity;
+        private Integer promotionQuantity;
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Builder normalQuantity(String normalQuantity) {
+            this.normalQuantity = InputParser.convertToInt(normalQuantity);
+            return this;
+        }
+
+        public Builder promotionQuantity(String promotionQuantity) {
+            this.promotionQuantity = InputParser.convertToInt(promotionQuantity);
+            return this;
+        }
+
+        public Builder promotion(Promotion promotion) {
+            this.promotion = promotion;
+            return this;
+        }
+
+        public StoreProduct build() {
+            return new StoreProduct(this);
+        }
     }
 
 }
