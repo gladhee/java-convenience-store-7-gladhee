@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
 
-class DateParserTest {
+public class DateParserTest {
 
     @DisplayName("올바른 형식의 날짜 문자열을 LocalDate로 변환한다")
     @ParameterizedTest
