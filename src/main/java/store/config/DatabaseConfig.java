@@ -10,15 +10,20 @@ import store.repository.impl.StoreProductsRepositoryImpl;
 import store.util.reader.FileReader;
 
 public class DatabaseConfig {
+    private static final String PROMOTIONS_FILE = "promotions.md";
+    private static final String PRODUCTS_FILE = "products.md";
+    private static final String NULL_VALUE = "null";
+    private static final String DEFAULT_QUANTITY = "0";
+
     private static DatabaseConfig instance;
     private final StoreProductsRepositoryImpl storeProducts;
     private final ProductRepositoryImpl products;
     private final PromotionRepositoryImpl promotions;
 
     private DatabaseConfig() {
-        storeProducts = StoreProductsRepositoryImpl.getInstance();
-        products = ProductRepositoryImpl.getInstance();
-        promotions = PromotionRepositoryImpl.getInstance();
+        this.storeProducts = StoreProductsRepositoryImpl.getInstance();
+        this.products = ProductRepositoryImpl.getInstance();
+        this.promotions = PromotionRepositoryImpl.getInstance();
         initializeData();
     }
 
@@ -30,8 +35,8 @@ public class DatabaseConfig {
     }
 
     private void initializeData() {
-        loadFile("promotions.md", this::parsePromotionLine);
-        loadFile("products.md", this::parseProductAndStoreProductLine);
+        loadFile(PROMOTIONS_FILE, this::parsePromotionLine);
+        loadFile(PRODUCTS_FILE, this::parseProductAndStoreProductLine);
     }
 
     private void loadFile(String fileName, LineParser parser) {
@@ -42,55 +47,86 @@ public class DatabaseConfig {
 
     private void parsePromotionLine(String line) {
         String[] infos = line.split(",");
-        Promotion promotion = Promotion.builder()
+        Promotion promotion = createPromotion(infos);
+        promotions.save(infos[0], promotion);
+    }
+
+    private Promotion createPromotion(String[] infos) {
+        return Promotion.builder()
                 .name(infos[0])
                 .requiredQuantity(infos[1])
                 .freeQuantity(infos[2])
                 .startDate(infos[3])
                 .endDate(infos[4])
                 .build();
-        promotions.save(infos[0], promotion);
     }
 
     private void parseProductAndStoreProductLine(String line) {
         String[] infos = line.split(",");
-        createProduct(infos);
-        createStoreProduct(infos);
+        saveProduct(infos);
+        saveStoreProduct(infos);
     }
 
-    private void createProduct(String[] infos) {
-        Product product = Product.builder()
-                .name(infos[0])
-                .price(infos[1])
-                .build();
+    private void saveProduct(String[] infos) {
+        Product product = createProduct(infos);
         products.save(infos[0], product);
     }
 
-    private void createStoreProduct(String[] infos) {
-        Product product = products.findByName(infos[0]);
-        StoreProduct storeProduct = storeProducts.findByName(infos[0]);
-        if (storeProduct != null) {
-            storeProduct.updateNormalQuantity(infos[2]);
-            return;
-        }
+    private Product createProduct(String[] infos) {
+        return Product.builder()
+                .name(infos[0])
+                .price(infos[1])
+                .build();
+    }
 
-        if (!infos[3].equals("null")) {
-            Promotion promotion = promotions.findByName(infos[3]);
-            storeProducts.save(infos[0], StoreProduct.builder()
-                    .product(product)
-                    .normalQuantity("0")
-                    .promotionQuantity(infos[2])
-                    .promotion(promotion)
-                    .build());
+    private void saveStoreProduct(String[] infos) {
+        Product product = products.findByName(infos[0]);
+        StoreProduct existingProduct = storeProducts.findByName(infos[0]);
+
+        if (existingProduct != null) {
+            updateExistingProduct(existingProduct, infos);
             return;
         }
-        storeProducts.save(infos[0], StoreProduct.builder()
+        createNewStoreProduct(product, infos);
+    }
+
+    private void updateExistingProduct(StoreProduct storeProduct, String[] infos) {
+        storeProduct.updateNormalQuantity(infos[2]);
+    }
+
+    private void createNewStoreProduct(Product product, String[] infos) {
+        StoreProduct newProduct = selectStoreProductType(product, infos);
+        storeProducts.save(infos[0], newProduct);
+    }
+
+    private StoreProduct selectStoreProductType(Product product, String[] infos) {
+        if (isPromotionalProduct(infos[3])) {
+            return createPromotionalStoreProduct(product, infos);
+        }
+        return createNormalStoreProduct(product, infos);
+    }
+
+    private boolean isPromotionalProduct(String promotionInfo) {
+        return !NULL_VALUE.equals(promotionInfo);
+    }
+
+    private StoreProduct createPromotionalStoreProduct(Product product, String[] infos) {
+        Promotion promotion = promotions.findByName(infos[3]);
+        return StoreProduct.builder()
+                .product(product)
+                .normalQuantity(DEFAULT_QUANTITY)
+                .promotionQuantity(infos[2])
+                .promotion(promotion)
+                .build();
+    }
+
+    private StoreProduct createNormalStoreProduct(Product product, String[] infos) {
+        return StoreProduct.builder()
                 .product(product)
                 .normalQuantity(infos[2])
                 .promotionQuantity(null)
                 .promotion(null)
-                .build());
-
+                .build();
     }
 
     public StoreProductsRepositoryImpl getStoreProducts() {
