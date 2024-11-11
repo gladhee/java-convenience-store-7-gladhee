@@ -76,8 +76,24 @@ public class Promotion {
         return !currentDate.isBefore(startDate) && !currentDate.isAfter(endDate);
     }
 
+    public int calculateTotalQuantityPerSet() {
+        return requiredQuantity + freeQuantity;
+    }
+
+    public int calculatePromotionDiscount(int price) {
+        return price * freeQuantity;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public int getRequiredQuantity() {
+        return requiredQuantity;
+    }
+
+    public int getFreeQuantity() {
+        return freeQuantity;
     }
 
     private void validatePromotionProduct() {
