@@ -2,6 +2,7 @@ package store.repository.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import store.domain.promotion.Promotion;
@@ -11,7 +12,7 @@ import store.repository.interfaces.StoreProductsRepository;
 public class StoreProductsRepositoryImpl implements StoreProductsRepository {
 
     private static StoreProductsRepositoryImpl instance;
-    private final Map<String, StoreProduct> storeProducts = new HashMap<>();
+    private final Map<String, StoreProduct> storeProducts = new LinkedHashMap<>();
 
     public static StoreProductsRepositoryImpl getInstance() {
         if (instance == null) {
@@ -40,9 +41,6 @@ public class StoreProductsRepositoryImpl implements StoreProductsRepository {
         return new ArrayList<>(storeProducts.values());
     }
 
-    @Override
-    public void updatePromotion(StoreProduct storeProduct, String promotionQuantity, Promotion promotion) {
-        storeProduct.updatePromotion(promotionQuantity, promotion);
-    }
+
 
 }

@@ -11,5 +11,4 @@ public interface StoreProductsRepository {
 
     List<StoreProduct> findAll();
 
-    void updatePromotion(StoreProduct storeProduct, String promotionQuantity, Promotion promotion);
 }

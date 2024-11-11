@@ -1,10 +1,11 @@
 package store.repository.interfaces;
 
-import java.util.List;
+import java.util.Map;
+import store.domain.product.Product;
 import store.domain.promotion.Promotion;
 
 public interface PromotionRepository {
-    void save(Promotion promotion);
+    public void save(String name, Promotion promotion);
     Promotion findByName(String promotionName);
-    List<Promotion> findAll();
+    public Map<String, Promotion> findAll();
 }

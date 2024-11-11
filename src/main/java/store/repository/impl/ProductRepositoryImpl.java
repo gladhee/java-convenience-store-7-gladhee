@@ -1,6 +1,7 @@
 package store.repository.impl;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import store.domain.product.Product;
 import store.repository.interfaces.ProductRepository;
@@ -8,7 +9,7 @@ import store.repository.interfaces.ProductRepository;
 public class ProductRepositoryImpl implements ProductRepository {
 
     private static ProductRepositoryImpl instance;
-    private final Map<String, Product> products = new HashMap<>();
+    private final Map<String, Product> products = new LinkedHashMap<>();
 
     public static ProductRepositoryImpl getInstance() {
         if (instance == null) {
