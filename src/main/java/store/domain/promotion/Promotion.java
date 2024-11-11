@@ -76,6 +76,10 @@ public class Promotion {
         return !currentDate.isBefore(startDate) && !currentDate.isAfter(endDate);
     }
 
+    public String getName() {
+        return name;
+    }
+
     private void validatePromotionProduct() {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 프로모션명은 빈 값일 수 없습니다.");
