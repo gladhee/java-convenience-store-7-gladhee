@@ -15,7 +15,7 @@ public class InputParser {
             }
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 숫자로 변환할 수 없는 값입니다.");
+            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
         }
     }
 
