@@ -52,15 +52,31 @@ public class Promotion {
     }
 
     private void validatePromotionProduct() {
+        validatePromotionName();
+        validateRequiredQuantity();
+        validateFreeQuantity();
+        validatePromotionDate();
+    }
+
+    private void validatePromotionName() {
         if (name == null || name.trim().isEmpty()) {
             throw new EmptyPromotionNameException();
         }
+    }
+
+    private void validateRequiredQuantity() {
         if (requiredQuantity <= 0) {
             throw new QuantityShouldBePositiveException();
         }
+    }
+
+    private void validateFreeQuantity() {
         if (freeQuantity <= 0) {
             throw new QuantityShouldBePositiveException();
         }
+    }
+
+    private void validatePromotionDate() {
         if (startDate.isAfter(endDate)) {
             throw new StartDateShouldBeEarlierThanEndDateException();
         }
