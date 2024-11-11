@@ -1,5 +1,7 @@
 package store.domain.store;
 
+import java.time.LocalDate;
+import java.util.Objects;
 import store.domain.product.Product;
 import store.domain.promotion.Promotion;
 import store.util.parser.InputParser;
@@ -58,11 +60,103 @@ public class StoreProduct {
     }
 
     public boolean hasSufficientStock(int requestedQuantity) {
+        if (normalQuantity == null)
+            return promotionQuantity >= requestedQuantity;
+        if (promotionQuantity == null)
+            return normalQuantity >= requestedQuantity;
         return (normalQuantity + promotionQuantity) >= requestedQuantity;
+    }
+
+    public int getTotalQuantity() {
+        return normalQuantity + promotionQuantity;
+    }
+
+    public void decreaseStock(int quantity) {
+        if (!hasSufficientStock(quantity)) {
+            throw new IllegalStateException("[ERROR] 재고가 부족합니다.");
+        }
+
+        if (hasValidPromotion()) {
+            decreaseWithPromotion(quantity);
+            return;
+        }
+        decreaseNormalStock(quantity);
+    }
+
+    private boolean hasValidPromotion() {
+        return promotion != null && promotion.isApplicable();
+    }
+
+    private void decreaseWithPromotion(int quantity) {
+        int promotionSets = quantity / promotion.calculateTotalQuantityPerSet();
+        int remainingQuantity = quantity % promotion.calculateTotalQuantityPerSet();
+
+        // 프로모션 재고 처리
+        int promotionNeeded = promotionSets * promotion.calculateTotalQuantityPerSet();
+        if (promotionQuantity >= promotionNeeded) {
+            promotionQuantity -= promotionNeeded;
+        } else {
+            int remainingFromPromotion = promotionNeeded - promotionQuantity;
+            promotionQuantity = 0;
+            normalQuantity -= remainingFromPromotion;
+        }
+
+        // 남은 수량 처리
+        normalQuantity -= remainingQuantity;
+    }
+
+    private void decreaseNormalStock(int quantity) {
+        normalQuantity -= quantity;
+    }
+
+    public int calculatePrice(int requestedQuantity) {
+        if (!hasValidPromotion()) {
+            return calculateNormalPrice(requestedQuantity);
+        }
+        return calculatePromotionPrice(requestedQuantity);
+    }
+
+    private int calculateNormalPrice(int quantity) {
+        return product.calculateTotalPrice(quantity);
+    }
+
+    private int calculatePromotionPrice(int quantity) {
+        int sets = quantity / promotion.calculateTotalQuantityPerSet();
+        int remainder = quantity % promotion.calculateTotalQuantityPerSet();
+
+        int setPrice = product.calculateTotalPrice(sets) * promotion.getRequiredQuantity();
+        int remainderPrice = product.calculateTotalPrice(remainder);
+
+        return setPrice + remainderPrice;
+    }
+
+    public int calculatePromotionDiscount(int quantity) {
+        if (!hasValidPromotion()) {
+            return 0;
+        }
+
+        int sets = quantity / promotion.calculateTotalQuantityPerSet();
+        return sets * promotion.calculatePromotionDiscount(product.getPrice());
+    }
+
+    public String getName() {
+        return product.getName();
     }
 
     public Promotion getPromotion() {
         return promotion;
+    }
+
+    public int getPromotionQuantity() {
+        return Objects.requireNonNullElse(promotionQuantity, 0);
+    }
+
+    public int getNormalQuantity() {
+        if (normalQuantity == null) {
+            return 0;
+        }
+
+        return normalQuantity;
     }
 
     public String toNormalString() {
@@ -70,7 +164,7 @@ public class StoreProduct {
             return "";
         }
         if (normalQuantity == 0) {
-            return "- " + product.toString() + " 재고없음\n";
+            return "- " + product.toString() + " 재고 없음\n";
         }
         return "- " + product.toString() + " " + normalQuantity + "개\n";
     }
@@ -80,7 +174,7 @@ public class StoreProduct {
             return "";
         }
         if (promotionQuantity == 0) {
-            return "- " + product.toString() + " 재고없음 " + promotion.getName() + "\n";
+            return "- " + product.toString() + " 재고 없음 " + promotion.getName() + "\n";
         }
 
         return "- " + product.toString() + " " + promotionQuantity + "개 " + promotion.getName() + "\n";
