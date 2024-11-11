@@ -66,4 +66,9 @@ public class Product {
         return Objects.hash(name, price);
     }
 
+    @Override
+    public String toString() {
+        return name + " " + String.format("%,d", price) + "원";
+    }
+
 }
