@@ -65,4 +65,8 @@ public class InputView {
         }
     }
 
+    public static void closeStream() {
+        Console.close();
+    }
+
 }

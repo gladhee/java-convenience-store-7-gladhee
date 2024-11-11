@@ -31,6 +31,7 @@ public class StoreController {
                 OutputView.printError(e.getMessage());
             }
         } while (InputView.askToContinuePurchase());
+        InputView.closeStream();
     }
 
     private void processOrder() {
