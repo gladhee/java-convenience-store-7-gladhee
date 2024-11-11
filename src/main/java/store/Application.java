@@ -12,7 +12,6 @@ public class Application {
         StoreProductsService storeProductsService = new StoreProductsService(databaseConfig.getStoreProducts());
         StoreController storeController = new StoreController(orderService, storeProductsService);
 
-        System.out.println(databaseConfig.getStoreProducts().findAll());
         storeController.run();
     }
 }
