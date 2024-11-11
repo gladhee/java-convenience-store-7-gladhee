@@ -105,6 +105,10 @@ public class StoreProduct {
         return Objects.requireNonNullElse(promotionQuantity, 0);
     }
 
+    public int getNormalQuantity() {
+        return Objects.requireNonNullElse(normalQuantity, 0);
+    }
+
     public boolean isPromotionApplicable() {
         return promotion != null && promotion.isApplicable();
     }
